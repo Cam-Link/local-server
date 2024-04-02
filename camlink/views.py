@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 import json
+import os
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -17,7 +18,7 @@ def start():
 
 
 
-
+@csrf_exempt
 def link(request):
   try:   
 
@@ -30,18 +31,28 @@ def link(request):
 
         #return error message if the code doesn't match with the code variable here
 
+        #create a new link or user in the model
+
         new_link = Link()
 
         new_link.save()
 
-        request.session['uid'] = new_link.id
+        id = new_link.id
+
+        #save the id in session to be sent as cookie
+
+        request.session['uid'] = id
+
+        #create the directories which belong to the new user
+
+        os.makedirs(f"camlink/videos/{id}/full")
 
         
 
-        return JsonResponse(data)
+        return JsonResponse({'msg':'message'})
 
       except Exception as e:
-          return JsonResponse({'msg':str(e)})
+        return JsonResponse({'msg':str(e)})
 
     else:
         return JsonResponse({'msg':"method not supported"})
