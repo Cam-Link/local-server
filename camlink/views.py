@@ -42,7 +42,31 @@ def refresh(request):
         
         peers = int(request.session.get("peers",0))
 
-        last_id = int(Link.objects.all().order_by('-id')[0].id)
+
+
+        users = Link.objects.all().order_by('-id')
+
+        
+
+
+        if 0 == peers:
+
+          length = len(users)
+
+          if length == 0:
+            return JsonResponse({'msg':"no new link"})
+
+          new_links = []
+
+          for i in users:
+            new_links.insert(0,i.id)
+
+          request.session['peers'] = new_links[-1]
+          
+          return JsonResponse({'msg':'success','add':new_links})
+
+
+        last_id = int(users[0].id)
 
         if peers == last_id:
           return JsonResponse({'msg':"no new link"})
