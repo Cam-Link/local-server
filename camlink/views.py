@@ -40,19 +40,19 @@ def refresh(request):
     if request.method == "GET":
       try:
         
-        # peers = request.session.get("peers",0)
+        peers = int(request.session.get("peers",0))
 
-        peers=0
-
-        last_id = Link.objects.all().order_by('-id')[0]
+        last_id = int(Link.objects.all().order_by('-id')[0].id)
 
         if peers == last_id:
           return JsonResponse({'msg':"no new link"})
 
-        new_links=[last_id+1]
+        new_links = [peers+1]
 
-        while(new_links[-1] <= last_id):
+        while(new_links[-1] < last_id):
           new_links.append(new_links[-1] + 1)
+        
+        request.session['peers'] = last_id
 
         return JsonResponse({'msg':'success','add':new_links})
 
