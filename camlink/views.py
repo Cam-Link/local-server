@@ -159,28 +159,6 @@ def refresh(request):
 
 
 
-@csrf_exempt
-def play(request):
-  try:   
-
-<<<<<<< HEAD
-    if request.method == "GET":
-      try:
-          
-        data = json.loads(request.body)
-
-        uid = data['uid']
-        cid = data['cid']
-
-        #return the requested chunk of video
-        
-        
-        path = os.getcwd() + f"/camlink/videos/{uid}/{cid}.webm"
-
-        chunk = open(path, 'rb')
-
-        return FileResponse(chunk, content_type='video/webm')
-=======
 def play():
   pass
 
@@ -193,7 +171,7 @@ def play():
 
 @csrf_exempt
 def stop(request):
-  try:   
+  try:
 
     if request.method == "POST":
       try:
@@ -229,7 +207,6 @@ def stop(request):
 
 
         return JsonResponse({'msg':"message"})
->>>>>>> stop
 
       except Exception as e:
         return JsonResponse({'msg':str(e)})
