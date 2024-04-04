@@ -7,4 +7,5 @@ urlpatterns = [
     path("stream/", views.stream),
     path("refresh/", views.refresh),
     path("play/", views.play),
+    path("stop/", views.stop),
 ]
