@@ -33,9 +33,25 @@ def stream():
 
 
 
+@csrf_exempt
+def play(request):
+  try:   
 
-def play():
-  pass
+    if request.method == "GET":
+      try:
+        
+        num = request.session.get("num",0)
+
+        
+
+      except Exception as e:
+        return JsonResponse({'msg':str(e)})
+
+    else:
+        return JsonResponse({'msg':"method not supported"})
+
+  except:
+    return JsonResponse({'msg':"Unexpected error"})
 
 
 
