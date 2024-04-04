@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pythonvanilla,django,venv,virtualenv
 
 
-exports/*
+camlink/exports/*
 ### Django ###
 *.log
 *.pot
