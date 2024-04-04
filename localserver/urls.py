@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('camlink/', include("camlink.urls")),
+    path('screenshare/', include("screenshare.urls")),
 ]

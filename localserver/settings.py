@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'access',
     'camlink',
+    'screenshare',
     'live',
-    'localserver',
 ]
 
 MIDDLEWARE = [
