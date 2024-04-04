@@ -1,12 +1,17 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,django,venv,virtualenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pythonvanilla,django,venv,virtualenv
 
+<<<<<<< HEAD
 screenshare/screen/*
 
 videos/*
 
 
 
+=======
+
+camlink/exports/*
+>>>>>>> stop
 ### Django ###
 *.log
 *.pot
