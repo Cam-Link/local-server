@@ -12,28 +12,31 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
+link_code = ""
+
 @csrf_exempt
 def start(request):
+  global link_code
+
   try:
     if request.method == 'POST':
       
         # Generate link code 
         
-        link_code = "ab12" 
+        link_code = "camlink" 
         
-        if link_code:   
+         
           
-          response_data = {
-                        'msg': 'success',
-                        'code' : link_code
-                    }
-                   
-          response = JsonResponse(response_data)
-          response.set_cookie('Peers', '0')
-          return response
+        response_data = {
+                      'msg': 'success',
+                      'code' : link_code
+                  }
+                  
+        response = JsonResponse(response_data)
+        request.session['peers'] = 0
+        return response
         
-        else:
-              return JsonResponse({'error': 'Link code is missing.'}, status=400)
+        
               
     else:
         # Return an error if the request method is not POST
@@ -49,6 +52,8 @@ def start(request):
 
 @csrf_exempt
 def link(request):
+  global link_code
+
   try:   
 
     if request.method == "POST":
@@ -59,6 +64,8 @@ def link(request):
         code = data['code']
 
         #return error message if the code doesn't match with the code variable here
+        if code != link_code:
+          return JsonResponse({'msg':'code does not match'})
 
         #create a new link or user in the model
 
