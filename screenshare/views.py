@@ -4,6 +4,7 @@ import os
 import json
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
+import shutil
 
 # Create your views here.
 
@@ -121,7 +122,20 @@ def play(request):
 
 
 
-
-
-def stop():
-  pass
+@csrf_exempt
+def stop(request):
+    try:
+        if request.method == 'POST':
+            
+            # Delete the contents of the screen folder
+            
+            shutil.rmtree(os.getcwd() + "/screenshare/screen")
+            
+            return JsonResponse({'msg': 'success'})
+            
+        else:
+            # Return an error if the request method is not POST
+            return JsonResponse({'error': 'Method is not allowed.'}, status=405)
+    except Exception as e:
+           
+            return JsonResponse({'error': str(e)}, status=500)
