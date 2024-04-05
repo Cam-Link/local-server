@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from camlink.models import Link
 
-import uuid
-
 import shutil
 import os
 import json
