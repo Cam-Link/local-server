@@ -25,8 +25,8 @@ def link():
 
 
 
-def stream():
-  pass
+def stream(request):
+  return JsonResponse({'msg': 'sucess' , 'add':new_user_ids})
 
 
 
