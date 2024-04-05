@@ -103,8 +103,8 @@ def link(request):
 
 
 
-def stream():
-  pass
+def stream(request):
+  return JsonResponse({'msg': 'sucess' , 'add':new_user_ids})
 
 
 
