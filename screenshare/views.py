@@ -76,9 +76,27 @@ def link(request):
 
 
 
-def stream():
-  pass
+def stream(request):
+   try:
+      if request.method == "POST":
+         try:
+            chunk = request.FILES['chunk']
+            num  = request.session.get("num",0)
 
+            path = os.getcwd()+ f"/screenshare/screen/{num}.webm"
+            with open (path , 'wb') as file:
+               for chunk_data in chunk:
+                  file.write(chunk_data)
+            
+            request.session['num'] = int(num)+1
+            return JsonResponse({'msg':'sucess'})
+         except Exception as e:
+            return JsonResponse({'msg':str(e)})
+      else :
+         return JsonResponse({'msg':'method is not supported'}) 
+          
+   except:
+      return JsonResponse({'msg':'Unexpected error'})
 
 
 
