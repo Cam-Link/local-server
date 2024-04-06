@@ -98,14 +98,17 @@ def link(request):
 
 
 
+
 @csrf_exempt
 def stream(request):
+
   try:
     if request.method == 'POST':
 
       chunk = request.FILES['chunk']
 
       uid = request.session.get('uid')
+
       if uid is None:
         return JsonResponse({'msg': 'User ID not found.'},status=400)
       
@@ -115,26 +118,30 @@ def stream(request):
       link.number +=1
       link.save()
 
-      chunk_path = os.get_cwd() + f"/camlink/videos/{uid}/{name}.webm"
-      full_path = os.get_cwd() + f"/camlink/videos/{uid}/full/{uid}.webm"
+      chunk_path = os.getcwd() + f"/camlink/videos/{uid}/{name}.webm"
+      full_path = os.getcwd() + f"/camlink/videos/{uid}/full/{uid}.webm"
       
       with open(chunk_path, 'ab') as chunk_file:
         chunk_file.write(chunk.read())
-        
-      with open(full_path, 'ab') as chunk_file:
-        chunk_file.write(chunk.read())
+
+      chunk.seek(0)
+
+      with open(full_path, 'ab') as video_file:
+        video_file.write(chunk.read())
+
 
       
 
-      return JsonResponse({'msg':'sucess'}, status=200)
+      return JsonResponse({'msg':'success'})
 
     else:
-      return JsonResponse({'msg':'Method not allowed. '},status = 405)
-  except Link.DoesNotExist:
-    return JsonResponse({'msg':'User not found.'}, status=400)
-  except Exception as e:
-    return JsonResponse({'error':f'Unexpected eror: {str(e)}'})
+      return JsonResponse({'msg':'Method not allowed.'})
+  
+  except:
+    return JsonResponse({'msg':"Unexpected error"})
     
+
+
 
 
 
