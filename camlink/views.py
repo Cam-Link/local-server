@@ -4,7 +4,6 @@ from camlink.models import Link
 import shutil
 import os
 import json
-import subprocess
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -99,10 +98,13 @@ def link(request):
 
 
 
-
+@csrf_exempt
 def stream(request):
   try:
     if request.method == 'POST':
+
+      chunk = request.FILES['chunk']
+
       uid = request.session.get('uid')
       if uid is None:
         return JsonResponse({'msg': 'User ID not found.'},status=400)
@@ -113,18 +115,19 @@ def stream(request):
       link.number +=1
       link.save()
 
-      video_dir = f"camlink/videos/{uid}"
-      chunk_path = os.path.join(video_dir,f"{name}.webm")
-      with open(chunk_path, 'wb') as chunk_file:
-        chunk_file.write(request.body)
+      chunk_path = os.get_cwd() + f"/camlink/videos/{uid}/{name}.webm"
+      full_path = os.get_cwd() + f"/camlink/videos/{uid}/full/{uid}.webm"
+      
+      with open(chunk_path, 'ab') as chunk_file:
+        chunk_file.write(chunk.read())
         
-      full = os.path(f"camlink/videos/{uid}/full")
-      with open(full, 'ab') as chunk_file:
-        chunk_file.write(request.body)
+      with open(full_path, 'ab') as chunk_file:
+        chunk_file.write(chunk.read())
 
       
 
-      return JsonResponse({'msg':'sucess','name':name}, status=200)
+      return JsonResponse({'msg':'sucess'}, status=200)
+
     else:
       return JsonResponse({'msg':'Method not allowed. '},status = 405)
   except Link.DoesNotExist:
