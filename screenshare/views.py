@@ -79,27 +79,27 @@ def link(request):
 def stream(request):
   global number
 
-   try:
-      if request.method == "POST":
-         try:
-            chunk = request.FILES['chunk']
+  try:
+    if request.method == "POST":
+        try:
+          chunk = request.FILES['chunk']
 
-            path = os.getcwd()+ f"/screenshare/screen/{number}.webm"
+          path = os.getcwd()+ f"/screenshare/screen/{number}.webm"
 
-            with open (path , 'wb') as file:
-              file.write(chunk.read())
-            
-            number += 1
-            
-            return JsonResponse({'msg':'success'})
-         except Exception as e:
-            return JsonResponse({'msg':str(e)})
-
-      else :
-         return JsonResponse({'msg':'method is not supported'}) 
+          with open (path , 'wb') as file:
+            file.write(chunk.read())
           
-   except:
-      return JsonResponse({'msg':'Unexpected error'})
+          number += 1
+          
+          return JsonResponse({'msg':'success'})
+        except Exception as e:
+          return JsonResponse({'msg':str(e)})
+
+    else :
+        return JsonResponse({'msg':'method is not supported'}) 
+        
+  except:
+    return JsonResponse({'msg':'Unexpected error'})
 
 
 
