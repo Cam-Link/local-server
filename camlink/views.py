@@ -4,8 +4,10 @@ from camlink.models import Link
 import shutil
 import os
 import json
+import subprocess
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 
@@ -99,10 +101,55 @@ def link(request):
 
 
 
+def append_video_chunks(id):
+  chunk_files = os.listdir(f"camlink/videos/{id}")
+  chunk_files = [file for file in chunk_files if file.endswith('.webm')]
+  chunk_files.sort()
+  output_path = os.path.join(f"camlink/videos/{id}/full", "output.webm")
+
+  if len(chunk_files)<1:
+    return
+  first_chunk_path = os.path.join(f"camlink/videos/{id}/full" ,  chunk_files[0])
+  os.rename(first_chunk_path , output_path)
+  for chunk_file in chunk_files[1:]:
+        chunk_path = os.path.join(f"camlink/videos/{id}/full", chunk_file)
+        subprocess.run(['ffmpeg', '-i', output_path, '-c', 'copy', '-bsf:v', 'h264_mp4toannexb', '-f', 'mpegts', os.path.join(f"camlink/videos/{id}/full", 'temp.mpegts')], check=True)
+        subprocess.run(['ffmpeg', '-i', chunk_path, '-c', 'copy', '-bsf:v', 'h264_mp4toannexb', '-f', 'mpegts', os.path.join(f"camlink/videos/{id}/full", 'temp2.mpegts')], check=True)
+        subprocess.run(['ffmpeg', '-i', 'concat:temp.mpegts|temp2.mpegts', '-c', 'copy', '-bsf:a', 'aac_adtstoasc', output_path], check=True)
+        os.remove(os.path.join(f"camlink/videos/{id}/full", 'temp.mpegts'))
+        os.remove(os.path.join(f"camlink/videos/{id}/full", 'temp2.mpegts'))
+        os.remove(chunk_path)
+   
 
 
-def stream():
-  pass
+def stream(request):
+  try:
+    if request.method == 'POST':
+      uid = request.session.get('uid')
+      if uid is None:
+        return JsonResponse({'msg': 'User ID not found.'},status=400)
+      
+      link = Link.objects.get (id=uid)
+
+      name = link.number
+      link.number +=1
+      link.save()
+
+      video_dir = f"camlink/videos/{uid}"
+      chunk_path = os.path.join(video_dir,f"{name}.webm")
+      with open(chunk_path, 'wb') as chunk_file:
+        chunk_file.write(request.body)
+
+      append_video_chunks(uid)
+
+      return JsonResponse({'msg':'sucess','name':name}, status=200)
+    else:
+      return JsonResponse({'msg':'Method not allowed. '},status = 405)
+  except Link.DoesNotExist:
+    return JsonResponse({'msg':'User not found.'}, status=400)
+  except Exception as e:
+    return JsonResponse({'error':f'Unexpected eror: {str(e)}'})
+    
 
 
 
