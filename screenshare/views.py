@@ -75,23 +75,26 @@ def link(request):
 
 
 
-
+@csrf_exempt
 def stream(request):
+  global number
+
    try:
       if request.method == "POST":
          try:
             chunk = request.FILES['chunk']
-            num  = request.session.get("num",0)
 
-            path = os.getcwd()+ f"/screenshare/screen/{num}.webm"
+            path = os.getcwd()+ f"/screenshare/screen/{number}.webm"
+
             with open (path , 'wb') as file:
-               for chunk_data in chunk:
-                  file.write(chunk_data)
+              file.write(chunk.read())
             
-            request.session['num'] = int(num)+1
-            return JsonResponse({'msg':'sucess'})
+            number += 1
+            
+            return JsonResponse({'msg':'success'})
          except Exception as e:
             return JsonResponse({'msg':str(e)})
+
       else :
          return JsonResponse({'msg':'method is not supported'}) 
           
