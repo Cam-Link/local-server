@@ -18,6 +18,9 @@ Used to link cameras found in the same event using LAN.
 - Install the requirements
   - `pip install -r requirements.txt`
 - Create a new folder named `videos` inside `local-server/camlink`
+- Create a new folder named `exports` inside `local-server/camlink`
 - Create a new folder named `screen` inside `local-server/screenshare`
+- Make migration:
+  - `python manage.py migrate`
 - You can now run the local server
   - `python manage.py runserver`
