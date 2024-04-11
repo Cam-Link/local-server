@@ -145,18 +145,18 @@ def play(request):
 
 @csrf_exempt
 def stop(request):
-    try:
-        if request.method == 'POST':
-            
-            # Delete the contents of the screen folder
-            
-            shutil.rmtree(os.getcwd() + "/screenshare/screen")
-            
-            return JsonResponse({'msg': 'success'})
-            
-        else:
-            # Return an error if the request method is not POST
-            return JsonResponse({'error': 'Method is not allowed.'}, status=405)
-    except Exception as e:
-           
-            return JsonResponse({'error': str(e)}, status=500)
+  try:
+    if request.method == 'POST':
+        
+      # Delete the contents of the screen folder
+      
+      shutil.rmtree(os.getcwd() + "/screenshare/screen")
+      os.makedirs("screenshare/screen")
+      
+      return JsonResponse({'msg': 'success'})
+        
+    else:
+      # Return an error if the request method is not POST
+      return JsonResponse({'error': 'Method is not allowed.'})
+  except Exception as e:
+    return JsonResponse({'error': str(e)})
