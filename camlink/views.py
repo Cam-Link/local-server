@@ -253,9 +253,11 @@ def stop(request):
         
         #clear the database
 
-        links = Link.objects.all()
+        links = Link.objects.all() 
 
         links.delete()
+
+        request.session['peers'] = 0
 
         #move the recordings to exports folder
 
