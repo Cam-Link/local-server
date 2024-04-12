@@ -3,6 +3,7 @@
 import os
 import sys
 
+import socket
 import cherrypy
 from django.core.management import execute_from_command_line
 from localserver.wsgi import application
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     ssl_keyfile = 'key.pem'
 
     cherrypy.config.update({
-        'server.socket_host': '192.168.101.5',
+        'server.socket_host': socket.gethostbyname(socket.gethostname()),
         'server.socket_port': 8000,
         'server.ssl_module': 'builtin',
         'server.ssl_certificate': ssl_certfile,
