@@ -84,7 +84,7 @@ def link(request):
 
         
 
-        return JsonResponse({'msg':'message'})
+        return JsonResponse({'msg':'success'})
 
       except Exception as e:
         return JsonResponse({'msg':str(e)})
@@ -255,7 +255,8 @@ def stop(request):
 
         links = Link.objects.all() 
 
-        links.delete()
+        if len(links) > 0:
+          links.delete()
 
         request.session['peers'] = 0
 
@@ -269,7 +270,14 @@ def stop(request):
 
         for i in folders:
           path = videos_dir + "/" + i + "/full/"
-          file = os.listdir(path)[0]
+          them = os.listdir(path)
+
+          if len(them) > 0:
+            file = them[0]
+          else:
+            continue
+          
+          
 
           source = path + file
           destination = exports_dir + "/" + file
