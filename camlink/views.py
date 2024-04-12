@@ -281,7 +281,7 @@ def stop(request):
           shutil.rmtree(videos_dir + "/" + i)
 
 
-        return JsonResponse({'msg':"message"})
+        return JsonResponse({'msg':"success"})
 
       except Exception as e:
         return JsonResponse({'msg':str(e)})
