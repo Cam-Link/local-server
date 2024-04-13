@@ -107,10 +107,12 @@ def stream(request):
 
       chunk = request.FILES['chunk']
 
-      uid = request.session.get('uid')
+
+      uid = int(request.session.get('uid'))
+
 
       if uid is None:
-        return JsonResponse({'msg': 'User ID not found.'},status=400)
+        return JsonResponse({'msg': 'User ID not found.'})
       
       link = Link.objects.get (id=uid)
 
@@ -131,7 +133,6 @@ def stream(request):
 
 
       
-
       return JsonResponse({'msg':'success'})
 
     else:
@@ -228,6 +229,9 @@ def play(request):
 
         return FileResponse(chunk, content_type='video/webm')
 
+      except FileNotFoundError:
+        return JsonResponse({'msg':'again'})
+
       except Exception as e:
         return JsonResponse({'msg':str(e)})
 
@@ -235,7 +239,8 @@ def play(request):
         return JsonResponse({'msg':"method not supported"})
 
 
-  except:
+  except Exception as e:
+    print(e)
     return JsonResponse({'msg':"Unexpected error"})
 
 
