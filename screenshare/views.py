@@ -129,13 +129,15 @@ def play(request):
 
         return FileResponse(chunk, content_type='video/webm')
 
-
+      except FileNotFoundError:
+        return JsonResponse({'msg':'again'})
+        
       except Exception as e:
         return JsonResponse({'msg':str(e)})
 
     else:
         return JsonResponse({'msg':"method not supported"})
-
+  
   except:
     return JsonResponse({'msg':"Unexpected error"})
 
@@ -145,6 +147,8 @@ def play(request):
 
 @csrf_exempt
 def stop(request):
+  global number
+
   try:
     if request.method == 'POST':
         
@@ -152,6 +156,8 @@ def stop(request):
       
       shutil.rmtree(os.getcwd() + "/screenshare/screen")
       os.makedirs("screenshare/screen")
+
+      number = 0
       
       return JsonResponse({'msg': 'success'})
         

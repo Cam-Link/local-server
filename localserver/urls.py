@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('camlink/', include("camlink.urls")),
     path('screenshare/', include("screenshare.urls")),
+    path('live/', include("live.urls")),
 ]

@@ -240,7 +240,6 @@ def play(request):
 
 
   except Exception as e:
-    print(e)
     return JsonResponse({'msg':"Unexpected error"})
 
 
